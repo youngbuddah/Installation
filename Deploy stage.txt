@@ -1,0 +1,39 @@
+1  apt update -y
+2  cd /opt
+17  wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.106/bin/apache-tomcat-9.0.106.tar.gz
+18  tar -xvzf apache-tomcat-9.0.106.tar.gz
+19  cd apache-tomcat-9.0.106/
+20  cd bin/
+21  ./catalina.sh start
+22  curl ifconfig.me
+23  ./catalina.sh restart
+24  ./catalina.sh stop
+25  java --version
+26  ./catalina.sh start
+27  ls
+28  cd ..
+29  ls
+30  cd conf
+31  ls
+34  vim tomcat-users.xml
+    <role rolename="manager-gui"/>
+    <role rolename="manager-jmx"/>
+    <role rolename="manager-script"/>
+    <role rolename="manager-status"/>
+    <user username="linux" password="linux" roles="manager-gui,manager-jmx,manager-script,manager-status"/>
+35  ls
+36  cd ..
+37  cd webapps/
+38  ls
+39  cd manager/
+40  ls
+42  cd META-INF/
+    comment this section
+        <!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+        allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+        -->
+43  ls
+44  vim context.xml
+45  cd ..
+46  cd bin/
+47  ./catalina.sh start

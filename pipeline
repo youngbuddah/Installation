@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git Pull') {
+            steps {
+               git 'https://github.com/abhilashmwaghmare/student-ui.git'
+            }
+        }
+        stage('build'){
+            steps{
+                sh '/opt/maven/bin/mvn clean package'
+            }
+        }
+        stage('test'){
+            steps{
+                withSonarQubeEnv(installationName:'sonar', credentialsId: 'sonar-cred') {
+    // some block
+}
+            }
+        }
+    }
+}
