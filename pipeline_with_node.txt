@@ -1,0 +1,39 @@
+pipeline {
+    agent { label 'mynode' }  // 👈 This runs the whole pipeline on 'mynode'
+
+    stages {
+        stage('Git Pull') {
+            steps {
+                git 'https://github.com/abhilashmwaghmare/student-ui.git'
+            }
+        }
+
+        stage('build') {
+            steps {
+                sh '/opt/maven/bin/mvn clean package'
+            }
+        }
+
+        stage('test') {
+            steps {
+                withSonarQubeEnv(installationName: 'sonar', credentialsId: 'sonar-cred') {
+                    // Add sonar analysis steps here, like:
+                    sh '/opt/maven/bin/mvn sonar:sonar'
+                }
+            }
+        }
+
+        stage('deploy') {
+            steps {
+                deploy adapters: [
+                    tomcat9(
+                        alternativeDeploymentContext: '',
+                        credentialsId: 'tomcat',
+                        path: '',
+                        url: 'http://107.22.6.77:8080/'
+                    )
+                ], contextPath: '/', war: '**/*.war'
+            }
+        }
+    }
+}
