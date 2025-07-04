@@ -1,0 +1,40 @@
+pipeline {
+    agent { 
+        label 'mynode'
+    }
+    stages {
+        stage('Git Pull') {
+            steps {
+                git 'https://github.com/abhilashmwaghmare/student-ui.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '/opt/maven/bin/mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    withSonarQubeEnv(installationName: 'sonar', credentialsId: 'sonar-cred') {
+                        //sh '/opt/maven/bin/mvn sonar:sonar'
+                    }
+                }
+            }
+        }
+        stage('Artifact-s3') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+    // some block
+        sh 'aws s3 ls'
+        sh 'aws s3 cp /home/ubuntu/workspace/myproject/target/studentapp-2.2-SNAPSHOT.war s3://my-bucket-ab36'
+}  
+                }
+            }
+        stage('Deploy') {
+            steps {
+                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcat', path: '', url: 'http://3.88.101.126:8080/')], contextPath: '/', war: '**/*.war'
+            }
+        }
+    }
+}
