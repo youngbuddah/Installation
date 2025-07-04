@@ -1,0 +1,37 @@
+pipeline {
+    agent { label 'mynode' }
+    stages {
+        stage('initial stage Git Pull') {
+            steps {
+                git branch: 'main', url: 'https://github.com/youngbuddah/terraform_practice_3.git'
+            }
+        }
+        stage('terraform-init') {
+            steps {
+               sh '''
+                
+                terraform init '''
+            }
+        }
+        stage('terraform-plan'){
+            steps{
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+    // some block
+                sh '''
+                
+                terraform init '''
+                }
+            }
+        }
+            stage('terraform-apply'){
+            steps{
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+    // some block
+                sh '''
+                
+                terraform apply --auto-approve '''
+                }
+            }
+        }
+    }
+}
