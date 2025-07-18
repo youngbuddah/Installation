@@ -30,12 +30,11 @@ sudo systemctl enable jenkins.service
 
 echo "Installing Maven..."
 cd /opt
-sudo wget https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.zip
+sudo wget https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.11-bin.tar.gz
 
-echo "Installing unzip and extracting Maven..."
-sudo apt install -y unzip
-sudo unzip apache-maven-3.9.10-bin.zip
-sudo mv apache-maven-3.9.10 maven
+echo "Extracting the apache maven..."
+sudo tar -xvzf apache-maven-3.9.11-bin.tar.gz
+sudo mv apache-maven-3.9.11-bin maven
 
 echo "Setting up Maven environment variables..."
 sudo bash -c 'cat > /etc/profile.d/maven.sh <<EOF
